@@ -182,9 +182,9 @@ if (screen === "login") {
         </div>
 
         <h1 style={styles.title}>
-          SIH26047
+          SMART MEDICAL HEALTHCARE SYSTEM
           <br />
-          Smart Healthcare
+          SMART MEDICAL HEALTHCARE SYSTEM
         </h1>
 
         <p style={styles.description}>
@@ -656,7 +656,7 @@ function Header() {
 
       <div>
         <h2 style={styles.logo}>
-          SIH26047
+          SMART MEDICAL HEALTHCARE
         </h2>
 
         <p style={styles.logoText}>
