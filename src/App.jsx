@@ -218,7 +218,7 @@ if (screen === "login") {
             style={styles.primaryButton}
            onClick={handleLogin}
           >
-            Login →
+            Login to dashboard→
           </button>
         </div>
 
