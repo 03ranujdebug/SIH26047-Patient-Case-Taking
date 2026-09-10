@@ -183,8 +183,6 @@ if (screen === "login") {
 
         <h1 style={styles.title}>
           SMART MEDICAL HEALTHCARE SYSTEM
-          <br />
-          SMART MEDICAL HEALTHCARE SYSTEM
         </h1>
 
         <p style={styles.description}>
