@@ -660,7 +660,7 @@ function Header() {
         </h2>
 
         <p style={styles.logoText}>
-          Smart Healthcare
+          Secure Patient Case Management System
         </p>
       </div>
 
