@@ -39,11 +39,48 @@ const [password, setPassword] = useState("");
     });
   }
 function handleLogin() {
-  if (username === "admin" && password === "1234") {
+  const users = [
+    {
+      id: "DOC001",
+      password: "doc123",
+      role: "doctor",
+    },
+    {
+      id: "DOC002",
+      password: "doc456",
+      role: "doctor",
+    },
+    {
+      id: "PAT001",
+      password: "pat123",
+      role: "patient",
+    },
+    {
+      id: "PAT002",
+      password: "pat456",
+      role: "patient",
+    },
+    {
+      id: "ADMIN001",
+      password: "admin123",
+      role: "admin",
+    },
+  ];
+
+  const user = users.find(
+    (account) =>
+      account.id === username &&
+      account.password === password
+  );
+
+  if (user) {
     localStorage.setItem("loggedIn", "true");
-    setScreen("welcome");
+    localStorage.setItem("userId", user.id);
+    localStorage.setItem("userRole", user.role);
+
+    setScreen("role");
   } else {
-    alert("Invalid username or password");
+    alert("Invalid User ID or Password");
   }
 }
   function smartExtract(text) {
@@ -223,6 +260,51 @@ if (screen === "login") {
         <p style={styles.formSubtitle}>
           🔒 Your patient information is handled securely
         </p>
+      </main>
+    </div>
+  );
+}
+if (screen === "role") {
+  return (
+    <div style={styles.page}>
+      <Header />
+
+      <main style={styles.hero}>
+        <div style={styles.card}>
+          <h1 style={styles.title}>
+            Who are you?
+          </h1>
+
+          <p style={styles.description}>
+            Please select your role to continue
+          </p>
+
+          <div style={styles.roleContainer}>
+
+            <button
+              style={styles.roleButton}
+              onClick={() => {
+                localStorage.setItem("selectedRole", "doctor");
+                setScreen("doctor");
+              }}
+            >
+              👨‍⚕️
+              <span>I am a Doctor</span>
+            </button>
+
+            <button
+              style={styles.roleButton}
+              onClick={() => {
+                localStorage.setItem("selectedRole", "patient");
+                setScreen("welcome");
+              }}
+            >
+              👤
+              <span>I am a Patient</span>
+            </button>
+
+          </div>
+        </div>
       </main>
     </div>
   );
@@ -880,15 +962,39 @@ voiceButton: {
    marginBottom: "15px",
  },
 
- aiNote: {
-   marginTop: "18px",
-   padding: "12px",
-   background: "#fff7e6",
-   borderRadius: "8px",
-   color: "#765400",
-   fontSize: "14px",
-   },
+aiNote: {
+  marginTop: "18px",
+  padding: "12px",
+  background: "#fff7e6",
+  borderRadius: "8px",
+  color: "#765400",
+  fontSize: "14px",
+},
 
-   };
+roleContainer: {
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+  marginTop: "30px",
+},
+
+roleButton: {
+  width: "100%",
+  padding: "20px",
+  border: "1px solid #d6e4ea",
+  borderRadius: "12px",
+  background: "white",
+  fontSize: "20px",
+  fontWeight: "600",
+  color: "#073b5c",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "15px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+},
+
+};
 
 export default App;
