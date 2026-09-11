@@ -1,13 +1,12 @@
 import { useState } from "react";
 
 function App() {
-const [screen, setScreen] = useState(
-  localStorage.getItem("loggedIn") === "true" ? "welcome" : "login"
-);
+const [screen, setScreen] = useState("login");
 const [listening, setListening] = useState(false);
 
 const [username, setUsername] = useState("");
 const [password, setPassword] = useState("");
+const [selectedCase, setSelectedCase] = useState(null);
   const [patient, setPatient] = useState({
     name: "",
     age: "",
@@ -16,6 +15,7 @@ const [password, setPassword] = useState("");
   });
 
   const [caseData, setCaseData] = useState({
+    caseId: "",
     complaint: "",
     duration: "",
     severity: "",
@@ -82,6 +82,21 @@ function handleLogin() {
   } else {
     alert("Invalid User ID or Password");
   }
+}
+function generateCaseId() {
+  const year = new Date().getFullYear();
+
+  const lastNumber =
+    Number(localStorage.getItem("lastCaseNumber")) || 0;
+
+  const newNumber = lastNumber + 1;
+
+  localStorage.setItem(
+    "lastCaseNumber",
+    newNumber.toString()
+  );
+
+  return `CASE-${year}-${String(newNumber).padStart(4, "0")}`;
 }
   function smartExtract(text) {
   const lowerText = text.toLowerCase();
@@ -284,9 +299,15 @@ if (screen === "role") {
             <button
               style={styles.roleButton}
               onClick={() => {
-                localStorage.setItem("selectedRole", "doctor");
-                setScreen("doctor");
-              }}
+  const userRole = localStorage.getItem("userRole");
+
+  if (userRole === "doctor") {
+    localStorage.setItem("selectedRole", "doctor");
+    setScreen("doctor");
+  } else {
+    alert("This account is not registered as a Doctor.");
+  }
+}}
             >
               👨‍⚕️
               <span>I am a Doctor</span>
@@ -295,15 +316,302 @@ if (screen === "role") {
             <button
               style={styles.roleButton}
               onClick={() => {
-                localStorage.setItem("selectedRole", "patient");
-                setScreen("welcome");
-              }}
+  const userRole = localStorage.getItem("userRole");
+
+  if (userRole === "patient") {
+    localStorage.setItem("selectedRole", "patient");
+    setScreen("patient");
+  } else {
+    alert("This account is not registered as a Patient.");
+  }
+}}
             >
               👤
               <span>I am a Patient</span>
             </button>
 
           </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+// PATIENT DASHBOARD
+if (screen === "patient") {
+  return (
+    <div style={styles.page}>
+      <Header />
+
+      <main style={styles.hero}>
+        <div style={styles.card}>
+
+          <h1 style={styles.title}>
+            👤 Patient Dashboard
+          </h1>
+
+          <p style={styles.description}>
+            Welcome! Manage your health information and start your case.
+          </p>
+
+          <div style={styles.patientActions}>
+
+            <button
+              style={styles.patientActionButton}
+              onClick={() => setScreen("registration")}
+            >
+              📝
+              <div>
+                <strong>Start Patient Case</strong>
+                <p>Enter your symptoms and health information.</p>
+              </div>
+            </button>
+
+            <button
+              style={styles.patientActionButton}
+            >
+              📄
+              <div>
+                <strong>My Medical Reports</strong>
+                <p>View your uploaded medical reports.</p>
+              </div>
+            </button>
+
+            <button
+              style={styles.patientActionButton}
+            >
+              📋
+              <div>
+                <strong>My Case History</strong>
+                <p>View your previous patient cases.</p>
+              </div>
+            </button>
+
+          </div>
+
+          <button
+            style={styles.logoutButton}
+            onClick={() => {
+              localStorage.removeItem("loggedIn");
+              localStorage.removeItem("userId");
+              localStorage.removeItem("selectedRole");
+              setScreen("login");
+            }}
+          >
+            Logout
+          </button>
+
+        </div>
+      </main>
+    </div>
+  );
+}
+// DOCTOR COMPLETE CASE
+if (screen === "doctorCase" && selectedCase) {
+  return (
+    <div style={styles.page}>
+      <Header />
+
+      <main style={styles.hero}>
+        <div style={styles.card}>
+
+          <h1 style={styles.title}>
+            🩺 Complete Patient Case
+          </h1>
+
+          <p style={styles.description}>
+            Detailed patient information for healthcare professional review.
+          </p>
+
+          <div style={styles.summaryCard}>
+
+            <h2>
+              Case ID: {selectedCase.caseId}
+            </h2>
+
+            <hr />
+
+            <h2>Patient Information</h2>
+
+            <p>
+              <strong>Name:</strong>{" "}
+              {selectedCase.patient?.name || "Not provided"}
+            </p>
+
+            <p>
+              <strong>Age:</strong>{" "}
+              {selectedCase.patient?.age || "Not provided"}
+            </p>
+
+            <p>
+              <strong>Gender:</strong>{" "}
+              {selectedCase.patient?.gender || "Not provided"}
+            </p>
+
+            <hr />
+
+            <h2>Chief Complaint</h2>
+
+            <p>
+              {selectedCase.caseData?.complaint || "Not provided"}
+            </p>
+
+            <h2>Duration</h2>
+
+            <p>
+              {selectedCase.caseData?.duration || "Not provided"}
+            </p>
+
+            <h2>Severity</h2>
+
+            <p>
+              {selectedCase.caseData?.severity || "Not provided"}
+            </p>
+
+            <h2>Other Symptoms</h2>
+
+            <p>
+              {selectedCase.caseData?.symptoms || "None reported"}
+            </p>
+
+            <h2>Medical History</h2>
+
+            <p>
+              {selectedCase.caseData?.medicalHistory || "None reported"}
+            </p>
+
+            <h2>Current Medicines</h2>
+
+            <p>
+              {selectedCase.caseData?.medicines || "None reported"}
+            </p>
+
+            <h2>Allergies</h2>
+
+            <p>
+              {selectedCase.caseData?.allergies || "None reported"}
+            </p>
+
+          </div>
+
+          <button
+            style={styles.logoutButton}
+            onClick={() => setScreen("doctor")}
+          >
+            ← Back to Doctor Dashboard
+          </button>
+
+        </div>
+      </main>
+    </div>
+  );
+}
+// DOCTOR DASHBOARD
+if (screen === "doctor") {
+  const savedCases =
+  JSON.parse(localStorage.getItem("patientCases")) || [];
+  return (
+    <div style={styles.page}>
+      <Header />
+
+      <main style={styles.hero}>
+        <div style={styles.card}>
+
+          <h1 style={styles.title}>
+            👨‍⚕️ Doctor Dashboard
+          </h1>
+
+          <p style={styles.description}>
+            Welcome, Doctor
+          </p>
+          <div style={styles.savedCasesSection}>
+  <h2>Patient Cases</h2>
+
+  {savedCases.length === 0 ? (
+    <p>No patient cases available yet.</p>
+  ) : (
+    savedCases.map((item) => (
+      <div key={item.caseId} style={styles.caseItem}>
+        <h3>{item.caseId}</h3>
+
+        <p>
+          <strong>Patient:</strong>{" "}
+          {item.patient?.name || "Not provided"}
+        </p>
+
+        <p>
+          <strong>Age:</strong>{" "}
+          {item.patient?.age || "Not provided"}
+        </p>
+
+        <p>
+          <strong>Gender:</strong>{" "}
+          {item.patient?.gender || "Not provided"}
+        </p>
+
+        <p>
+          <strong>Complaint:</strong>{" "}
+          {item.caseData?.complaint || "Not provided"}
+        </p>
+
+        <p>
+          <strong>Created:</strong>{" "}
+          {item.createdAt}
+        </p>
+        <button
+  style={styles.viewCaseButton}
+  onClick={() => {
+    setSelectedCase(item);
+    setScreen("doctorCase");
+  }}
+>
+  🔍 View Complete Case →
+</button>
+      </div>
+    ))
+  )}
+</div>
+
+          <div style={styles.doctorGrid}>
+
+            <div style={styles.dashboardCard}>
+              <div style={styles.dashboardIcon}>📋</div>
+              <h2>Patient Cases</h2>
+              <p>View and manage patient case information.</p>
+            </div>
+
+            <div style={styles.dashboardCard}>
+              <div style={styles.dashboardIcon}>🚨</div>
+              <h2>Red Flag Cases</h2>
+              <p>Review patients requiring special attention.</p>
+            </div>
+
+            <div style={styles.dashboardCard}>
+              <div style={styles.dashboardIcon}>🤖</div>
+              <h2>AI Case Summaries</h2>
+              <p>Review structured AI-assisted case drafts.</p>
+            </div>
+
+            <div style={styles.dashboardCard}>
+              <div style={styles.dashboardIcon}>📄</div>
+              <h2>Medical Reports</h2>
+              <p>Access uploaded patient reports.</p>
+            </div>
+
+          </div>
+
+          <button
+            style={styles.logoutButton}
+            onClick={() => {
+              localStorage.removeItem("loggedIn");
+              localStorage.removeItem("userId");
+              localStorage.removeItem("userRole");
+              localStorage.removeItem("selectedRole");
+              setScreen("login");
+            }}
+          >
+            Logout
+          </button>
+
         </div>
       </main>
     </div>
@@ -571,7 +879,34 @@ if (screen === "role") {
 
             <button
               style={styles.button}
-              onClick={() => setScreen("summary")}
+             onClick={() => {
+  const newCaseId = generateCaseId();
+
+  const newCase = {
+    caseId: newCaseId,
+    patient: { ...patient },
+    caseData: {
+      ...caseData,
+      caseId: newCaseId,
+    },
+    createdAt: new Date().toLocaleString(),
+  };
+
+  const existingCases =
+    JSON.parse(localStorage.getItem("patientCases")) || [];
+
+  localStorage.setItem(
+    "patientCases",
+    JSON.stringify([...existingCases, newCase])
+  );
+
+  setCaseData((previous) => ({
+    ...previous,
+    caseId: newCaseId,
+  }));
+
+  setScreen("summary");
+}}
             >
               Generate Case Summary →
             </button>
@@ -613,8 +948,9 @@ if (screen === "role") {
 
         <div style={styles.summaryCard}>
 
-          <h2>Patient Information</h2>
+  <h2>Case ID: {caseData.caseId}</h2>
 
+  <h2>Patient Information</h2>
           <p>
             <strong>Name:</strong> {patient.name || "Not provided"}
           </p>
@@ -970,7 +1306,22 @@ aiNote: {
   color: "#765400",
   fontSize: "14px",
 },
+savedCasesSection: {
+  marginTop: "30px",
+  padding: "25px",
+  background: "white",
+  borderRadius: "15px",
+  border: "1px solid #d6e4ea",
+  boxShadow: "0 5px 15px rgba(0,0,0,0.06)",
+},
 
+caseItem: {
+  marginTop: "20px",
+  padding: "20px",
+  background: "#f4f9fc",
+  borderRadius: "12px",
+  border: "1px solid #d6e4ea",
+},
 roleContainer: {
   display: "flex",
   flexDirection: "column",
@@ -994,7 +1345,59 @@ roleButton: {
   gap: "15px",
   boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
 },
+doctorGrid: {
+  display: "grid",
+  gridTemplateColumns: "repeat(2, 1fr)",
+  gap: "20px",
+  marginTop: "30px",
+},
 
+dashboardCard: {
+  background: "white",
+  padding: "25px",
+  borderRadius: "15px",
+  border: "1px solid #d6e4ea",
+  boxShadow: "0 5px 15px rgba(0,0,0,0.06)",
+  textAlign: "left",
+},
+
+dashboardIcon: {
+  fontSize: "35px",
+  marginBottom: "10px",
+},
+
+logoutButton: {
+  marginTop: "30px",
+  padding: "12px 30px",
+  border: "none",
+  borderRadius: "8px",
+  background: "#073b5c",
+  color: "white",
+  fontSize: "16px",
+  cursor: "pointer",
+},
+patientActions: {
+  display: "flex",
+  flexDirection: "column",
+  gap: "18px",
+  marginTop: "30px",
+},
+
+patientActionButton: {
+  width: "100%",
+  padding: "20px",
+  border: "1px solid #d6e4ea",
+  borderRadius: "15px",
+  background: "white",
+  fontSize: "18px",
+  color: "#073b5c",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  gap: "18px",
+  textAlign: "left",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+},
 };
 
 export default App;
