@@ -7,6 +7,11 @@ const [listening, setListening] = useState(false);
 const [username, setUsername] = useState("");
 const [password, setPassword] = useState("");
 const [selectedCase, setSelectedCase] = useState(null);
+const [selectedHospital, setSelectedHospital] = useState("");
+const [selectedDoctor, setSelectedDoctor] = useState("");
+const [selectedDate, setSelectedDate] = useState("");
+const [selectedTime, setSelectedTime] = useState("");
+const [appointmentId, setAppointmentId] = useState("");
   const [patient, setPatient] = useState({
     name: "",
     age: "",
@@ -98,7 +103,65 @@ function generateCaseId() {
 
   return `CASE-${year}-${String(newNumber).padStart(4, "0")}`;
 }
-  function smartExtract(text) {
+function generateAppointmentId() {
+  const year = new Date().getFullYear();
+  const randomNumber = Math.floor(1000 + Math.random() * 9000);
+
+  return `APT-${year}-${randomNumber}`;
+}
+
+
+const hospitals = [
+  {
+    name: "City Care Hospital",
+    doctors: [
+      {
+        name: "Dr. Sharma",
+        specialization: "General Physician",
+        days: ["Monday", "Wednesday", "Friday"],
+        times: ["10:00 AM", "10:30 AM", "11:00 AM"]
+      },
+      {
+        name: "Dr. Verma",
+        specialization: "Dermatologist",
+        days: ["Tuesday", "Thursday"],
+        times: ["11:00 AM", "11:30 AM", "12:00 PM"]
+      }
+    ]
+  },
+
+  {
+    name: "Ayush Wellness Hospital",
+    doctors: [
+      {
+        name: "Dr. Singh",
+        specialization: "Ayurveda Specialist",
+        days: ["Monday", "Tuesday", "Thursday"],
+        times: ["9:00 AM", "9:30 AM", "10:00 AM"]
+      },
+      {
+        name: "Dr. Gupta",
+        specialization: "General Physician",
+        days: ["Wednesday", "Friday", "Saturday"],
+        times: ["2:00 PM", "2:30 PM", "3:00 PM"]
+      }
+    ]
+  },
+
+  {
+    name: "MedLife Hospital",
+    doctors: [
+      {
+        name: "Dr. Patel",
+        specialization: "Cardiologist",
+        days: ["Monday", "Wednesday", "Saturday"],
+        times: ["4:00 PM", "4:30 PM", "5:00 PM"]
+      }
+    ]
+  }
+];
+
+function smartExtract(text) {
   const lowerText = text.toLowerCase();
 
   let extracted = {
@@ -226,7 +289,7 @@ recognition.onresult = (event) => {
 if (screen === "login") {
   return (
     <div style={styles.page}>
-      <Header />
+      <Header setScreen={setScreen} />
 
       <main style={styles.hero}>
         <div style={styles.icon}>
@@ -282,7 +345,7 @@ if (screen === "login") {
 if (screen === "role") {
   return (
     <div style={styles.page}>
-      <Header />
+      <Header setScreen={setScreen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -340,7 +403,7 @@ if (screen === "role") {
 if (screen === "patient") {
   return (
     <div style={styles.page}>
-      <Header />
+      <Header setScreen={setScreen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -385,7 +448,26 @@ if (screen === "patient") {
                 <p>View your previous patient cases.</p>
               </div>
             </button>
-
+<button
+  style={styles.patientActionButton}
+  onClick={() => setScreen("appointments")}
+>
+  📅
+  <div>
+    <strong>Book an Appointment</strong>
+    <p>Choose a hospital, doctor and available time slot.</p>
+  </div>
+</button>
+<button
+  style={styles.patientActionButton}
+  onClick={() => setScreen("myAppointments")}
+>
+  📋
+  <div>
+    <strong>My Appointments</strong>
+    <p>View your booked appointments and appointment details.</p>
+  </div>
+</button>
           </div>
 
           <button
@@ -405,11 +487,192 @@ if (screen === "patient") {
     </div>
   );
 }
+// APPOINTMENTS SCREEN
+if (screen === "appointments") {
+  const currentHospital = hospitals.find(
+    (hospital) => hospital.name === selectedHospital
+  );
+
+  const currentDoctor = currentHospital?.doctors.find(
+    (doctor) => doctor.name === selectedDoctor
+  );
+
+  const selectedDay = selectedDate
+    ? new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", {
+        weekday: "long",
+      })
+    : "";
+
+  const availableTimes =
+    currentDoctor && selectedDay && currentDoctor.days.includes(selectedDay)
+      ? currentDoctor.times
+      : [];
+
+  return (
+    <div style={styles.page}>
+      <Header setScreen={setScreen} />
+
+      <main style={styles.hero}>
+        <div style={styles.card}>
+
+          <h1 style={styles.title}>
+            📅 Book an Appointment
+          </h1>
+
+          <p style={styles.description}>
+            Choose a hospital, doctor and available appointment time.
+          </p>
+
+          <div style={styles.appointmentCard}>
+
+            <h2>🏥 Select Hospital</h2>
+
+            <select
+  style={styles.appointmentSelect}
+  value={selectedHospital}
+  onChange={(e) => {
+    setSelectedHospital(e.target.value);
+    setSelectedDoctor("");
+  }}
+>
+  <option value="">Select Hospital</option>
+  <option value="City Care Hospital">City Care Hospital</option>
+  <option value="Ayush Wellness Hospital">Ayush Wellness Hospital</option>
+  <option value="MedLife Hospital">MedLife Hospital</option>
+</select>
+
+            <h2>👨‍⚕️ Select Doctor</h2>
+
+            <select
+  style={styles.appointmentSelect}
+  value={selectedDoctor}
+  onChange={(e) => setSelectedDoctor(e.target.value)}
+  disabled={!selectedHospital}
+>
+  <option value="">Select Doctor</option>
+
+  {selectedHospital &&
+    hospitals
+      .find((hospital) => hospital.name === selectedHospital)
+      ?.doctors.map((doctor) => (
+        <option key={doctor.name} value={doctor.name}>
+          {doctor.name} - {doctor.specialization}
+        </option>
+      ))}
+</select>
+
+            <h2>📅 Select Date</h2>
+
+            <input
+  type="date"
+  style={styles.appointmentSelect}
+  value={selectedDate}
+  onChange={(e) => {
+  setSelectedDate(e.target.value);
+  setSelectedTime("");
+}}
+/>
+
+            <h2>🕐 Available Time</h2>
+
+            <select
+  style={styles.appointmentSelect}
+  value={selectedTime}
+  onChange={(e) => setSelectedTime(e.target.value)}
+>
+  <option value="">Select Time Slot</option>
+
+  {availableTimes.map((time) => (
+    <option key={time} value={time}>
+      {time}
+    </option>
+  ))}
+</select>
+{selectedDate && selectedDoctor && availableTimes.length === 0 && (
+  <p style={{ color: "#c62828", fontWeight: "600" }}>
+    ❌ {selectedDoctor} is not available on {selectedDay}.
+  </p>
+)}
+
+            <button
+              style={styles.button}
+              onClick={() => {
+  if (!selectedHospital || !selectedDoctor || !selectedDate || !selectedTime) {
+    alert("Please select hospital, doctor, date and time.");
+    return;
+  }
+
+  const newAppointmentId = generateAppointmentId();
+
+  const newAppointment = {
+    appointmentId: newAppointmentId,
+    patientId: localStorage.getItem("userId"),
+    hospital: selectedHospital,
+    doctor: selectedDoctor,
+    date: selectedDate,
+    time: selectedTime,
+  };
+
+  const existingAppointments =
+    JSON.parse(localStorage.getItem("appointments")) || [];
+
+  existingAppointments.push(newAppointment);
+
+  localStorage.setItem(
+    "appointments",
+    JSON.stringify(existingAppointments)
+  );
+
+  setAppointmentId(newAppointmentId);
+}}
+            >
+              Confirm Appointment →
+            </button>
+            {appointmentId && (
+  <div style={styles.summaryCard}>
+    <h2>✅ Appointment Confirmed</h2>
+
+    <p>
+      <strong>Appointment ID:</strong> {appointmentId}
+    </p>
+
+    <p>
+      <strong>Hospital:</strong> {selectedHospital}
+    </p>
+
+    <p>
+      <strong>Doctor:</strong> {selectedDoctor}
+    </p>
+
+    <p>
+      <strong>Date:</strong> {selectedDate}
+    </p>
+
+    <p>
+      <strong>Time:</strong> {selectedTime}
+    </p>
+  </div>
+)}
+
+          </div>
+
+          <button
+            style={styles.logoutButton}
+            onClick={() => setScreen("patient")}
+          >
+            ← Back to Patient Dashboard
+          </button>
+
+        </div>
+      </main>
+    </div>
+  );
+}
 // DOCTOR COMPLETE CASE
 if (screen === "doctorCase" && selectedCase) {
   return (
     <div style={styles.page}>
-      <Header />
+      <Header setScreen={setScreen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -505,13 +768,79 @@ if (screen === "doctorCase" && selectedCase) {
     </div>
   );
 }
+// MY APPOINTMENTS SCREEN
+if (screen === "myAppointments") {
+  const savedAppointments =
+    JSON.parse(localStorage.getItem("appointments")) || [];
+
+  const myAppointments = savedAppointments.filter(
+    (appointment) =>
+      appointment.patientId === localStorage.getItem("userId")
+  );
+
+  return (
+    <div style={styles.page}>
+      <Header setScreen={setScreen} />
+
+      <main style={styles.hero}>
+        <div style={styles.card}>
+          <h1 style={styles.title}>📋 My Appointments</h1>
+
+          <p style={styles.description}>
+            View your booked appointments and appointment details.
+          </p>
+
+          {myAppointments.length === 0 ? (
+            <div style={styles.summaryCard}>
+              <h2>No Appointments</h2>
+              <p>You have not booked any appointments yet.</p>
+            </div>
+          ) : (
+            myAppointments.map((appointment) => (
+              <div
+                key={appointment.appointmentId}
+                style={styles.summaryCard}
+              >
+                <h2>🆔 {appointment.appointmentId}</h2>
+
+                <p>
+                  <strong>Hospital:</strong> {appointment.hospital}
+                </p>
+
+                <p>
+                  <strong>Doctor:</strong> {appointment.doctor}
+                </p>
+
+                <p>
+                  <strong>Date:</strong> {appointment.date}
+                </p>
+
+                <p>
+                  <strong>Time:</strong> {appointment.time}
+                </p>
+              </div>
+            ))
+          )}
+
+          <button
+            style={styles.logoutButton}
+            onClick={() => setScreen("patient")}
+          >
+            ← Back to Patient Dashboard
+          </button>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 // DOCTOR DASHBOARD
 if (screen === "doctor") {
   const savedCases =
   JSON.parse(localStorage.getItem("patientCases")) || [];
   return (
     <div style={styles.page}>
-      <Header />
+      <Header setScreen={setScreen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -621,7 +950,7 @@ if (screen === "doctor") {
     return (
       <div style={styles.page}>
 
-        <Header />
+        <Header setScreen={setScreen} />
 
         <main style={styles.hero}>
 
@@ -666,7 +995,7 @@ if (screen === "doctor") {
     return (
       <div style={styles.page}>
 
-        <Header />
+        <Header setScreen={setScreen} />
 
         <main style={styles.formContainer}>
 
@@ -748,7 +1077,7 @@ if (screen === "doctor") {
     return (
       <div style={styles.page}>
 
-        <Header />
+        <Header setScreen={setScreen} />
 
         <main style={styles.caseContainer}>
 
@@ -926,7 +1255,7 @@ if (screen === "doctor") {
   return (
     <div style={styles.page}>
 
-      <Header />
+      <Header setScreen={setScreen} />
 
       <main style={styles.caseContainer}>
 
@@ -1062,11 +1391,12 @@ if (screen === "doctor") {
 }
 
 
+
 /* =========================
    HEADER
 ========================= */
 
-function Header() {
+function Header({ setScreen }) {
   return (
     <header style={styles.header}>
 
@@ -1080,9 +1410,24 @@ function Header() {
         </p>
       </div>
 
-      <div style={styles.badge}>
-        Patient Case-Taking
-      </div>
+      <div style={styles.headerRight}>
+  <span style={styles.userId}>
+    👤 {localStorage.getItem("userId")}
+  </span>
+
+  <button
+    style={styles.headerLogout}
+    onClick={() => {
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userRole");
+      localStorage.removeItem("selectedRole");
+      setScreen("login");
+    }}
+  >
+    Logout
+  </button>
+</div>
 
     </header>
   );
@@ -1365,7 +1710,27 @@ dashboardIcon: {
   fontSize: "35px",
   marginBottom: "10px",
 },
+headerRight: {
+  display: "flex",
+  alignItems: "center",
+  gap: "15px",
+},
 
+userId: {
+  fontSize: "16px",
+  fontWeight: "600",
+},
+
+headerLogout: {
+  padding: "10px 18px",
+  border: "none",
+  borderRadius: "8px",
+  background: "white",
+  color: "#073b5c",
+  fontSize: "15px",
+  fontWeight: "600",
+  cursor: "pointer",
+},
 logoutButton: {
   marginTop: "30px",
   padding: "12px 30px",
@@ -1376,6 +1741,25 @@ logoutButton: {
   fontSize: "16px",
   cursor: "pointer",
 },
+appointmentCard: {
+  marginTop: "25px",
+  padding: "30px",
+  background: "white",
+  borderRadius: "15px",
+  border: "1px solid #d6e4ea",
+  boxShadow: "0 5px 15px rgba(0,0,0,0.06)",
+},
+
+appointmentSelect: {
+  width: "100%",
+  padding: "14px",
+  marginBottom: "20px",
+  border: "1px solid #b8ccd6",
+  borderRadius: "8px",
+  fontSize: "16px",
+  background: "white",
+},
+
 patientActions: {
   display: "flex",
   flexDirection: "column",
