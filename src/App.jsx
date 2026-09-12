@@ -31,7 +31,20 @@ const [appointmentId, setAppointmentId] = useState("");
   });
   const [redFlagDetected, setRedFlagDetected] = useState(false);
   const [redFlagSymptom, setRedFlagSymptom] = useState("");
-
+const [ayushData, setAyushData] = useState({
+  prakriti: "",
+  vikriti: "",
+  sara: "",
+  samhanana: "",
+  height: "",
+  weight: "",
+  satmya: "",
+  satmyaNotes: "",
+  satva: "",
+  aharaShakti: "",
+  vaya: "",
+  bala: "",
+});
   function handlePatientChange(e) {
     setPatient({
       ...patient,
@@ -328,8 +341,35 @@ if (screen === "login") {
     <div style={styles.page}>
 
       <main style={styles.hero}>
+        <div
+  style={{
+    position: "absolute",
+    width: "260px",
+    height: "260px",
+    borderRadius: "50%",
+    background:
+      "radial-gradient(circle, rgba(25,169,139,0.16), rgba(25,169,139,0))",
+    top: "40px",
+    left: "-80px",
+    pointerEvents: "none",
+  }}
+/>
+
+<div
+  style={{
+    position: "absolute",
+    width: "320px",
+    height: "320px",
+    borderRadius: "50%",
+    background:
+      "radial-gradient(circle, rgba(7,59,92,0.13), rgba(7,59,92,0))",
+    top: "180px",
+    right: "-120px",
+    pointerEvents: "none",
+  }}
+/>
         <div style={styles.icon}>
-          🏥
+          🩺
         </div>
 
         <h1 style={styles.title}>
@@ -350,6 +390,7 @@ if (screen === "login") {
     placeholder="Enter username"
     value={username}
     onChange={(e) => setUsername(e.target.value)}
+    style={styles.input}
 />
 
           <label>
@@ -361,6 +402,7 @@ if (screen === "login") {
     placeholder="Enter password"
     value={password}
     onChange={(e) => setPassword(e.target.value)}
+    style={styles.input}
 />
 
           <button
@@ -370,7 +412,60 @@ if (screen === "login") {
             Login to dashboard→
           </button>
         </div>
+<div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    gap: "14px",
+    flexWrap: "wrap",
+    marginTop: "22px",
+  }}
+>
+  <div
+    style={{
+      padding: "10px 18px",
+      borderRadius: "30px",
+      background: "rgba(255,255,255,0.75)",
+      border: "1px solid rgba(7,59,92,0.08)",
+      boxShadow: "0 6px 18px rgba(7,59,92,0.08)",
+      fontSize: "14px",
+      fontWeight: "600",
+      color: "#275b70",
+    }}
+  >
+    🔒 Secure
+  </div>
 
+  <div
+    style={{
+      padding: "10px 18px",
+      borderRadius: "30px",
+      background: "rgba(255,255,255,0.75)",
+      border: "1px solid rgba(7,59,92,0.08)",
+      boxShadow: "0 6px 18px rgba(7,59,92,0.08)",
+      fontSize: "14px",
+      fontWeight: "600",
+      color: "#275b70",
+    }}
+  >
+    🌿 AYUSH Ready
+  </div>
+
+  <div
+    style={{
+      padding: "10px 18px",
+      borderRadius: "30px",
+      background: "rgba(255,255,255,0.75)",
+      border: "1px solid rgba(7,59,92,0.08)",
+      boxShadow: "0 6px 18px rgba(7,59,92,0.08)",
+      fontSize: "14px",
+      fontWeight: "600",
+      color: "#275b70",
+    }}
+  >
+    🩺 Patient Centric
+  </div>
+</div>
         <p style={styles.formSubtitle}>
           🔒 Your patient information is handled securely
         </p>
@@ -389,14 +484,38 @@ if (screen === "role") {
             Who are you?
           </h1>
 
-          <p style={styles.description}>
-            Please select your role to continue
-          </p>
+          <div
+  style={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "8px 16px",
+    borderRadius: "30px",
+    background: "rgba(255,255,255,0.72)",
+    border: "1px solid rgba(7,59,92,0.08)",
+    boxShadow: "0 6px 18px rgba(7,59,92,0.06)",
+    marginBottom: "28px",
+  }}
+>
+  <span>✨</span>
+  <span
+    style={{
+      fontSize: "15px",
+      fontWeight: "600",
+      color: "#35677c",
+    }}
+  >
+    Please select your role to continue
+  </span>
+</div>
 
           <div style={styles.roleContainer}>
 
             <button
-              style={styles.roleButton}
+              style={{
+  ...styles.roleButton,
+  borderLeft: "6px solid #087f73",
+}}
               onClick={() => {
   const userRole = localStorage.getItem("userRole");
 
@@ -408,12 +527,28 @@ if (screen === "role") {
   }
 }}
             >
-              👨‍⚕️
-              <span>I am a Doctor</span>
-            </button>
+  <div style={styles.roleIcon}>
+  🩺
+</div>
+
+  <div style={{ textAlign: "left", flex: 1 }}>
+    <div style={{ fontSize: "22px", fontWeight: "700" }}>
+      I am a Doctor
+    </div>
+
+    <div style={{ fontSize: "14px", marginTop: "6px", opacity: 0.75 }}>
+      Access patient cases, red flags and clinical information
+    </div>
+  </div>
+
+  <span style={{ fontSize: "24px" }}>→</span>
+</button>
 
             <button
-              style={styles.roleButton}
+              style={{
+  ...styles.roleButton,
+  borderLeft: "6px solid #19a98b",
+}}
               onClick={() => {
   const userRole = localStorage.getItem("userRole");
 
@@ -425,9 +560,22 @@ if (screen === "role") {
   }
 }}
             >
-              👤
-              <span>I am a Patient</span>
-            </button>
+  <div style={styles.roleIcon}>
+  👤
+</div>
+
+  <div style={{ textAlign: "left", flex: 1 }}>
+    <div style={{ fontSize: "22px", fontWeight: "700" }}>
+      I am a Patient
+    </div>
+
+    <div style={{ fontSize: "14px", marginTop: "6px", opacity: 0.75 }}>
+      Create your health case, AYUSH assessment and appointments
+    </div>
+  </div>
+
+  <span style={{ fontSize: "24px" }}>→</span>
+</button>
 
           </div>
         </div>
@@ -448,14 +596,43 @@ if (screen === "patient") {
             👤 Patient Dashboard
           </h1>
 
-          <p style={styles.description}>
-            Welcome! Manage your health information and start your case.
-          </p>
+          <div
+  style={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "10px",
+    padding: "10px 18px",
+    borderRadius: "30px",
+    background: "rgba(255,255,255,0.75)",
+    border: "1px solid rgba(7,59,92,0.08)",
+    boxShadow: "0 6px 18px rgba(7,59,92,0.06)",
+    margin: "10px auto 20px",
+  }}
+>
+  <span style={{ fontSize: "20px" }}>🌿</span>
+
+  <span
+    style={{
+      fontSize: "15px",
+      fontWeight: "600",
+      color: "#35677c",
+    }}
+  >
+    Welcome! Manage your health information and start your case.
+  </span>
+</div>
 
           <div style={styles.patientActions}>
 
             <button
-              style={styles.patientActionButton}
+              style={{
+  ...styles.patientActionButton,
+  gridColumn: "1 / -1",
+  minHeight: "125px",
+  background: "linear-gradient(135deg, #e8f8f4, #ffffff)",
+  border: "1px solid #ed0a0a",
+  boxShadow: "0 12px 28px rgba(7, 127, 115, 0.14)",
+}}
               onClick={() => setScreen("registration")}
             >
               📝
@@ -466,7 +643,10 @@ if (screen === "patient") {
             </button>
 
             <button
-              style={styles.patientActionButton}
+             style={{
+  ...styles.patientActionButton,
+  borderLeft: "6px solid #5b8def",
+}}
             >
               📄
               <div>
@@ -476,7 +656,10 @@ if (screen === "patient") {
             </button>
 
             <button
-              style={styles.patientActionButton}
+              style={{
+  ...styles.patientActionButton,
+  borderLeft: "6px solid #8b6fd6",
+}}
             >
               📋
               <div>
@@ -485,7 +668,10 @@ if (screen === "patient") {
               </div>
             </button>
 <button
-  style={styles.patientActionButton}
+  style={{
+  ...styles.patientActionButton,
+  borderLeft: "6px solid #19a98b",
+}}
   onClick={() => setScreen("appointments")}
 >
   📅
@@ -495,7 +681,10 @@ if (screen === "patient") {
   </div>
 </button>
 <button
-  style={styles.patientActionButton}
+  style={{
+  ...styles.patientActionButton,
+  borderLeft: "6px solid #f2a93b",
+}}
   onClick={() => setScreen("myAppointments")}
 >
   📋
@@ -754,17 +943,50 @@ if (screen === "doctorCase" && selectedCase) {
               {selectedCase.caseData?.complaint || "Not provided"}
             </p>
 
-            <h2>Duration</h2>
+            <h2
+  style={{
+    color: "#073b5c",
+    fontSize: "26px",
+    textAlign: "center",
+    marginBottom: "15px",
+  }}
+>
+  Duration
+</h2>
 
-            <p>
-              {selectedCase.caseData?.duration || "Not provided"}
-            </p>
+            <p
+  style={{
+    fontSize: "18px",
+    fontWeight: "600",
+    color: "#260649",
+    textAlign: "center",
+    marginBottom: "20px",
+  }}
+>
+  {selectedCase.caseData?.duration || "Not provided"}
+</p>
 
-            <h2>Severity</h2>
-
-            <p>
-              {selectedCase.caseData?.severity || "Not provided"}
-            </p>
+            <h2
+  style={{
+    color: "#073b5c",
+    fontSize: "26px",
+    textAlign: "center",
+    marginBottom: "15px",
+  }}
+>
+  Severity
+</h2>
+            <p
+  style={{
+    fontSize: "18px",
+    fontWeight: "600",
+    color: "#e08a2e",
+    textAlign: "center",
+    marginBottom: "25px",
+  }}
+>
+  {selectedCase.caseData?.severity || "Not provided"}
+</p>
 
             <h2>Other Symptoms</h2>
 
@@ -789,7 +1011,93 @@ if (screen === "doctorCase" && selectedCase) {
             <p>
               {selectedCase.caseData?.allergies || "None reported"}
             </p>
+<h2>🌿 AYUSH Assessment — Dashavidha Pariksha</h2>
 
+<h3>1. Prakriti</h3>
+<p>
+  {selectedCase.ayushData?.prakriti || "Not assessed"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Your natural body constitution
+</p>
+
+<h3>2. Vikriti</h3>
+<p>
+  {selectedCase.ayushData?.vikriti || "Not assessed"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Your current health condition or imbalance
+</p>
+
+<h3>3. Sara</h3>
+<p>
+  {selectedCase.ayushData?.sara || "Not assessed"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Quality and strength of body tissues
+</p>
+
+<h3>4. Samhanana</h3>
+<p>
+  {selectedCase.ayushData?.samhanana || "Not assessed"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Body build and compactness
+</p>
+
+<h3>5. Pramana</h3>
+<p>
+  Height: {selectedCase.ayushData?.height || "Not provided"} cm
+</p>
+<p>
+  Weight: {selectedCase.ayushData?.weight || "Not provided"} kg
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Body measurements and proportions
+</p>
+
+<h3>6. Satmya</h3>
+<p>
+  {selectedCase.ayushData?.satmya || "Not assessed"}
+</p>
+<p>
+  {selectedCase.ayushData?.satmyaNotes || "No additional notes"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  What food, lifestyle and environment suit you
+</p>
+
+<h3>7. Satva</h3>
+<p>
+  {selectedCase.ayushData?.satva || "Not assessed"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Mental strength and stability
+</p>
+
+<h3>8. Ahara Shakti</h3>
+<p>
+  {selectedCase.ayushData?.aharaShakti || "Not assessed"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Appetite and ability to handle food
+</p>
+
+<h3>9. Vaya</h3>
+<p>
+  {selectedCase.ayushData?.vaya || "Not assessed"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Age and stage of life
+</p>
+
+<h3>10. Bala</h3>
+<p>
+  {selectedCase.ayushData?.bala || "Not assessed"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Physical strength
+</p>
           </div>
 
           <button
@@ -892,40 +1200,75 @@ const redFlagCases = savedCases.filter(
             👨‍⚕️ Doctor Dashboard
           </h1>
 
-          <p style={styles.description}>
-            Welcome, Doctor
-          </p>
+          <div
+  style={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "9px 18px",
+    borderRadius: "30px",
+    background: "rgba(255,255,255,0.75)",
+    border: "1px solid rgba(7,59,92,0.08)",
+    boxShadow: "0 6px 18px rgba(7,59,92,0.06)",
+    marginTop: "8px",
+  }}
+>
+  <span>🩺</span>
+  <span style={{ fontSize: "15px", fontWeight: "600", color: "#35677c" }}>
+    Welcome, Doctor
+  </span>
+</div>
           
 
           <div style={styles.doctorGrid}>
 
             <div
-  style={styles.dashboardCard}
+  style={{
+  ...styles.dashboardCard,
+  borderLeft: "6px solid #19a98b",
+}}
  onClick={() => setScreen("doctorCases")}
 >
               <div style={styles.dashboardIcon}>📋</div>
-              <h2>Patient Cases</h2>
+              <h2 style={{ color: "#073b5c", fontSize: "28px", marginBottom: "12px" }}>
+  Patient Cases
+</h2>
               <p>View and manage patient case information.</p>
             </div>
 
             <div
-  style={styles.dashboardCard}
+  style={{
+  ...styles.dashboardCard,
+  borderLeft: "6px solid #e74c3c",
+}}
   onClick={() => setScreen("doctorRedFlags")}
 >
               <div style={styles.dashboardIcon}>🚨</div>
-              <h2>Red Flag Cases</h2>
+              <h2 style={{ color: "#073b5c", fontSize: "28px", marginBottom: "12px" }}>
+  Red Flag Cases
+</h2>
               <p>Review patients requiring special attention.</p>
             </div>
 
-            <div style={styles.dashboardCard}>
+            <div style={{
+  ...styles.dashboardCard,
+  borderLeft: "6px solid #8b6fd6",
+}}>
               <div style={styles.dashboardIcon}>🤖</div>
-              <h2>AI Case Summaries</h2>
+              <h2 style={{ color: "#073b5c", fontSize: "28px", marginBottom: "12px" }}>
+  AI Case Summaries
+</h2>
               <p>Review structured AI-assisted case drafts.</p>
             </div>
 
-            <div style={styles.dashboardCard}>
+            <div style={{
+  ...styles.dashboardCard,
+  borderLeft: "6px solid #5b8def",
+}}>
               <div style={styles.dashboardIcon}>📄</div>
-              <h2>Medical Reports</h2>
+              <h2 style={{ color: "#073b5c", fontSize: "28px", marginBottom: "12px" }}>
+  Medical Reports
+</h2>
               <p>Access uploaded patient reports.</p>
             </div>
 
@@ -980,32 +1323,48 @@ if (screen === "doctorCases") {
                 key={item.caseId}
                 style={styles.summaryCard}
               >
-                <h2>{item.caseId}</h2>
+                <h2
+  style={{
+    color: "#073b5c",
+    fontSize: "28px",
+    marginBottom: "20px",
+    textAlign: "center",
+  }}
+>
+  {item.caseId}
+</h2>
 
                 <p>
-                  <strong>Patient:</strong>{" "}
-                  {item.patient?.name || "Not provided"}
+  <strong style={{ color: "#087f73" }}>Patient:</strong>{" "}
+  <span style={{ fontWeight: "600" }}>
+    {item.patient?.name || "Not provided"}
+  </span>
+</p>
+
+                <p>
+                  <strong style={{ color: "#073b5c" }}>Age:</strong>{" "}
+<span style={{ fontWeight: "600" }}>
+  {item.patient?.age || "Not provided"}
+</span>
                 </p>
 
                 <p>
-                  <strong>Age:</strong>{" "}
-                  {item.patient?.age || "Not provided"}
-                </p>
-
+  <strong style={{ color: "#073b5c" }}>Gender:</strong>{" "}
+  <span style={{ fontWeight: "600" }}>
+    {item.patient?.gender || "Not provided"}
+  </span>
+</p>
                 <p>
-                  <strong>Gender:</strong>{" "}
-                  {item.patient?.gender || "Not provided"}
-                </p>
+  <strong style={{ color: "#073b5c" }}>Complaint:</strong>{" "}
+  <span style={{ fontWeight: "600", color: "#087f73" }}>
+    {item.caseData?.complaint || "Not provided"}
+  </span>
+</p>
 
-                <p>
-                  <strong>Complaint:</strong>{" "}
-                  {item.caseData?.complaint || "Not provided"}
-                </p>
-
-                <p>
-                  <strong>Created:</strong>{" "}
-                  {item.createdAt}
-                </p>
+                <p style={{ color: "#718391", fontSize: "14px" }}>
+  <strong style={{ color: "#607585" }}>Created:</strong>{" "}
+  {item.createdAt}
+</p>
 
                 <button
                   style={styles.viewCaseButton}
@@ -1060,34 +1419,55 @@ if (screen === "doctorRedFlags") {
             redFlagCases.map((item) => (
               <div
                 key={item.caseId}
-                style={styles.summaryCard}
+                style={{
+  ...styles.summaryCard,
+  borderLeft: "6px solid #e74c3c",
+}}
               >
-                <h2>⚠️ {item.caseId}</h2>
+                <h2
+  style={{
+    color: "#c0392b",
+    fontSize: "28px",
+    marginBottom: "20px",
+    textAlign: "center",
+  }}
+>
+  ⚠️ {item.caseId}
+</h2>
 
                 <p>
-                  <strong>Patient:</strong>{" "}
-                  {item.patient?.name || "Not provided"}
-                </p>
+  <strong style={{ color: "#e74c3c" }}>Patient:</strong>{" "}
+  <span style={{ fontWeight: "600" }}>
+    {item.patient?.name || "Not provided"}
+  </span>
+</p>
 
                 <p>
-                  <strong>Age:</strong>{" "}
-                  {item.patient?.age || "Not provided"}
-                </p>
+  <strong style={{ color: "#073b5c" }}>Age:</strong>{" "}
+  <span style={{ fontWeight: "600" }}>
+    {item.patient?.age || "Not provided"}
+  </span>
+</p>
 
                 <p>
-                  <strong>Gender:</strong>{" "}
-                  {item.patient?.gender || "Not provided"}
-                </p>
+  <strong style={{ color: "#073b5c" }}>Gender:</strong>{" "}
+  <span style={{ fontWeight: "600" }}>
+    {item.patient?.gender || "Not provided"}
+  </span>
+</p>
 
                 <p>
-                  <strong>Red Flag:</strong>{" "}
-                  {item.redFlagSymptom || "Warning symptom detected"}
-                </p>
-
+  <strong style={{ color: "#e74c3c" }}>🚨 Red Flag:</strong>{" "}
+  <span style={{ fontWeight: "700", color: "#c0392b" }}>
+    {item.redFlagSymptom || "Warning symptom detected"}
+  </span>
+</p>
                 <p>
-                  <strong>Complaint:</strong>{" "}
-                  {item.caseData?.complaint || "Not provided"}
-                </p>
+  <strong style={{ color: "#073b5c" }}>Complaint:</strong>{" "}
+  <span style={{ fontWeight: "600", color: "#087f73" }}>
+    {item.caseData?.complaint || "Not provided"}
+  </span>
+</p>
 
                 <p>
                   <strong>Created:</strong>{" "}
@@ -1171,29 +1551,75 @@ if (screen === "doctorRedFlags") {
 
         <main style={styles.formContainer}>
 
-          <h1 style={styles.heading}>
-            Patient Registration
-          </h1>
+          <h1
+  style={{
+    ...styles.heading,
+    fontSize: "42px",
+    fontWeight: "800",
+    letterSpacing: "-1px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "18px",
+    textAlign: "center",
+  }}
+>
+  <span>🧑‍⚕️</span>
+  <span>Patient Registration</span>
+</h1>
 
-          <p style={styles.formSubtitle}>
-            Let's begin by collecting some basic information.
-          </p>
-
+          <p
+  style={{
+    ...styles.formSubtitle,
+    fontSize: "18px",
+    textAlign: "center",
+    marginBottom: "30px",
+  }}
+>
+  Let's begin by collecting some basic information.
+</p>
+<div
+  style={{
+    width: "70px",
+    height: "4px",
+    background: "linear-gradient(90deg, #087f73, #19a98b)",
+    borderRadius: "10px",
+    margin: "0 auto 25px",
+  }}
+/>
           <div style={styles.form}>
 
-            <label>Patient Name</label>
+            <label
+  style={{
+    fontWeight: "600",
+    color: "#073b5c",
+    fontSize: "16px",
+  }}
+>
+  Patient Name
+</label>
 
             <input
-              name="name"
-              type="text"
+  style={styles.input}
+  name="name"
+  type="text"
               placeholder="Enter patient name"
               value={patient.name}
               onChange={handlePatientChange}
             />
 
-            <label>Age</label>
+            <label
+  style={{
+    fontWeight: "600",
+    color: "#073b5c",
+    fontSize: "16px",
+  }}
+>
+  Age
+</label>
 
             <input
+  style={styles.input}
               name="age"
               type="number"
               placeholder="Enter age"
@@ -1201,10 +1627,19 @@ if (screen === "doctorRedFlags") {
               onChange={handlePatientChange}
             />
 
-            <label>Gender</label>
+            <label
+  style={{
+    fontWeight: "600",
+    color: "#073b5c",
+    fontSize: "16px",
+  }}
+>
+  Gender
+</label>
 
             <select
-              name="gender"
+  style={styles.input}
+  name="gender"
               value={patient.gender}
               onChange={handlePatientChange}
             >
@@ -1214,10 +1649,19 @@ if (screen === "doctorRedFlags") {
               <option value="Other">Other</option>
             </select>
 
-            <label>Preferred Language</label>
+            <label
+  style={{
+    fontWeight: "600",
+    color: "#073b5c",
+    fontSize: "16px",
+  }}
+>
+  Preferred Language
+</label>
 
             <select
-              name="language"
+  style={styles.input}
+  name="language"
               value={patient.language}
               onChange={handlePatientChange}
             >
@@ -1227,7 +1671,7 @@ if (screen === "doctorRedFlags") {
             </select>
 
             <button
-              style={styles.button}
+              style={styles.primaryButton}
               onClick={() => setScreen("case")}
             >
               Continue →
@@ -1402,8 +1846,286 @@ if (screen === "doctorRedFlags") {
               value={caseData.allergies}
               onChange={handleCaseChange}
             />
+    
 
-            <button
+    <div style={styles.inputGroup}>
+      <label style={styles.label}>
+        1. Prakriti{" "}
+        <span style={{ fontWeight: "normal" }}>
+          (Your natural body constitution)
+        </span>
+      </label>
+
+      <select
+        name="prakriti"
+        value={ayushData.prakriti}
+        onChange={(e) =>
+          setAyushData({
+            ...ayushData,
+            prakriti: e.target.value,
+          })
+        }
+        style={styles.input}
+      >
+        <option value="">Select Prakriti</option>
+        <option value="Vata">Vata</option>
+        <option value="Pitta">Pitta</option>
+        <option value="Kapha">Kapha</option>
+        <option value="Vata-Pitta">Vata-Pitta</option>
+        <option value="Pitta-Kapha">Pitta-Kapha</option>
+        <option value="Vata-Kapha">Vata-Kapha</option>
+        <option value="Tridosha">Tridosha</option>
+        <option value="Not assessed">Not assessed</option>
+      </select>
+    </div>
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    2. Vikriti{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (Your current health condition or imbalance)
+    </span>
+  </label>
+
+  <textarea
+    name="vikriti"
+    placeholder="Describe your current health condition or imbalance"
+    value={ayushData.vikriti}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        vikriti: e.target.value,
+      })
+    }
+    style={styles.input}
+  />
+</div>
+
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    3. Sara{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (Quality and strength of body tissues)
+    </span>
+  </label>
+
+  <select
+    value={ayushData.sara}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        sara: e.target.value,
+      })
+    }
+    style={styles.input}
+  >
+    <option value="">Select</option>
+    <option value="Good">Good</option>
+    <option value="Moderate">Moderate</option>
+    <option value="Needs assessment">Needs assessment</option>
+  </select>
+</div>
+
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    4. Samhanana{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (Body build and compactness)
+    </span>
+  </label>
+
+  <select
+    value={ayushData.samhanana}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        samhanana: e.target.value,
+      })
+    }
+    style={styles.input}
+  >
+    <option value="">Select</option>
+    <option value="Well-built">Well-built</option>
+    <option value="Moderately built">Moderately built</option>
+    <option value="Needs assessment">Needs assessment</option>
+  </select>
+</div>
+
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    5. Pramana{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (Body measurements and proportions)
+    </span>
+  </label>
+
+  <input
+    type="number"
+    placeholder="Height (cm)"
+    value={ayushData.height}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        height: e.target.value,
+      })
+    }
+    style={styles.input}
+  />
+
+  <input
+    type="number"
+    placeholder="Weight (kg)"
+    value={ayushData.weight}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        weight: e.target.value,
+      })
+    }
+    style={{ ...styles.input, marginTop: "10px" }}
+  />
+</div>
+
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    6. Satmya{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (What food, lifestyle and environment suit you)
+    </span>
+  </label>
+
+  <select
+    value={ayushData.satmya}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        satmya: e.target.value,
+      })
+    }
+    style={styles.input}
+  >
+    <option value="">Select</option>
+    <option value="Good">Good</option>
+    <option value="Moderate">Moderate</option>
+    <option value="Needs assessment">Needs assessment</option>
+  </select>
+
+  <textarea
+    placeholder="Optional notes about food, lifestyle or environment"
+    value={ayushData.satmyaNotes}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        satmyaNotes: e.target.value,
+      })
+    }
+    style={{ ...styles.input, marginTop: "10px" }}
+  />
+</div>
+
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    7. Satva{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (Mental strength and stability)
+    </span>
+  </label>
+
+  <select
+    value={ayushData.satva}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        satva: e.target.value,
+      })
+    }
+    style={styles.input}
+  >
+    <option value="">Select</option>
+    <option value="Strong">Strong</option>
+    <option value="Moderate">Moderate</option>
+    <option value="Needs assessment">Needs assessment</option>
+  </select>
+</div>
+
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    8. Ahara Shakti{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (Appetite and ability to handle food)
+    </span>
+  </label>
+
+  <select
+    value={ayushData.aharaShakti}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        aharaShakti: e.target.value,
+      })
+    }
+    style={styles.input}
+  >
+    <option value="">Select</option>
+    <option value="Good">Good</option>
+    <option value="Moderate">Moderate</option>
+    <option value="Low">Low</option>
+  </select>
+</div>
+
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    9. Vaya{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (Age and stage of life)
+    </span>
+  </label>
+
+  <select
+    value={ayushData.vaya}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        vaya: e.target.value,
+      })
+    }
+    style={styles.input}
+  >
+    <option value="">Select</option>
+    <option value="Child">Child</option>
+    <option value="Young adult">Young adult</option>
+    <option value="Middle-aged">Middle-aged</option>
+    <option value="Older adult">Older adult</option>
+    <option value="Not assessed">Not assessed</option>
+  </select>
+</div>
+
+<div style={styles.inputGroup}>
+  <label style={styles.label}>
+    10. Bala{" "}
+    <span style={{ fontWeight: "normal" }}>
+      (Physical strength)
+    </span>
+  </label>
+
+  <select
+    value={ayushData.bala}
+    onChange={(e) =>
+      setAyushData({
+        ...ayushData,
+        bala: e.target.value,
+      })
+    }
+    style={styles.input}
+  >
+    <option value="">Select</option>
+    <option value="Strong">Strong</option>
+    <option value="Moderate">Moderate</option>
+    <option value="Weak">Weak</option>
+    <option value="Needs assessment">Needs assessment</option>
+  </select>
+</div>
+    <button
+      
               style={styles.button}
              onClick={() => {
   const newCaseId = generateCaseId();
@@ -1413,6 +2135,7 @@ if (screen === "doctorRedFlags") {
   patient: { ...patient },
   redFlagDetected: redFlagDetected,
   redFlagSymptom: redFlagSymptom,
+  ayushData: { ...ayushData },
   caseData: {
     ...caseData,
     caseId: newCaseId,
@@ -1476,9 +2199,27 @@ if (screen === "doctorRedFlags") {
 
         <div style={styles.summaryCard}>
 
-  <h2>Case ID: {caseData.caseId}</h2>
+  <h2
+  style={{
+    color: "#073b5c",
+    fontSize: "30px",
+    textAlign: "center",
+    marginBottom: "25px",
+  }}
+>
+  Case ID: {caseData.caseId}
+</h2>
 
-  <h2>Patient Information</h2>
+  <h2
+  style={{
+    color: "#073b5c",
+    fontSize: "28px",
+    textAlign: "center",
+    marginBottom: "25px",
+  }}
+>
+  Patient Information
+</h2>
           <p>
             <strong>Name:</strong> {patient.name || "Not provided"}
           </p>
@@ -1493,11 +2234,28 @@ if (screen === "doctorRedFlags") {
 
           <hr />
 
-          <h2>Chief Complaint</h2>
+          <h2
+  style={{
+    color: "#087f73",
+    fontSize: "28px",
+    textAlign: "center",
+    marginBottom: "20px",
+  }}
+>
+  Chief Complaint
+</h2>
 
-          <p>
-            {caseData.complaint || "Not provided"}
-          </p>
+          <p
+  style={{
+    fontSize: "20px",
+    fontWeight: "600",
+    color: "#d91b1b",
+    textAlign: "center",
+    marginBottom: "25px",
+  }}
+>
+  {caseData.complaint || "Not provided"}
+</p>
 
           <h2>Duration</h2>
 
@@ -1534,7 +2292,83 @@ if (screen === "doctorRedFlags") {
           <p>
             {caseData.allergies || "None reported"}
           </p>
+<h2>🌿 AYUSH Assessment — Dashavidha Pariksha</h2>
 
+<h3>1. Prakriti</h3>
+<p>{ayushData.prakriti || "Not assessed"}</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Your natural body constitution
+</p>
+
+<h3>2. Vikriti</h3>
+<p>{ayushData.vikriti || "Not assessed"}</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Your current health condition or imbalance
+</p>
+
+<h3>3. Sara</h3>
+<p>{ayushData.sara || "Not assessed"}</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Quality and strength of body tissues
+</p>
+
+<h3>4. Samhanana</h3>
+<p>{ayushData.samhanana || "Not assessed"}</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Body build and compactness
+</p>
+
+<h3>5. Pramana</h3>
+<p>
+  Height: {ayushData.height || "Not provided"} cm
+</p>
+<p>
+  Weight: {ayushData.weight || "Not provided"} kg
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Body measurements and proportions
+</p>
+
+<h3>6. Satmya</h3>
+<p>{ayushData.satmya || "Not assessed"}</p>
+<p>
+  {ayushData.satmyaNotes || "No additional notes"}
+</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  What food, lifestyle and environment suit you
+</p>
+
+<h3>7. Satva</h3>
+<p>{ayushData.satva || "Not assessed"}</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Mental strength and stability
+</p>
+
+<h3>8. Ahara Shakti</h3>
+<p>{ayushData.aharaShakti || "Not assessed"}</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Appetite and ability to handle food
+</p>
+
+<h3>9. Vaya</h3>
+<p>{ayushData.vaya || "Not assessed"}</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Age and stage of life
+</p>
+
+<h3>10. Bala</h3>
+<p>{ayushData.bala || "Not assessed"}</p>
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Physical strength
+</p>
+
+<p>
+  {ayushData.prakriti || "Not assessed"}
+</p>
+
+<p style={{ fontSize: "14px", color: "#666" }}>
+  Your natural body constitution
+</p>
           </div>
 
 {/* AI CASE DRAFT */}
@@ -1709,21 +2543,27 @@ function Header({ setScreen, screen }) {
 const styles = {
 
   page: {
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #eef8ff, #f5fffb)",
-    fontFamily: "Arial, Helvetica, sans-serif",
-    color: "#123047",
-  },
-
+  minHeight: "100vh",
+  background:
+    "radial-gradient(circle at 10% 10%, rgba(25, 169, 139, 0.12), transparent 30%), radial-gradient(circle at 90% 20%, rgba(7, 59, 92, 0.12), transparent 30%), linear-gradient(135deg, #f4fbfa 0%, #eef7fb 50%, #f8fcfa 100%)",
+  fontFamily: "'Segoe UI', Arial, Helvetica, sans-serif",
+  color: "#173b4d",
+  position: "relative",
+  overflow: "hidden",
+},
   header: {
-    height: "75px",
-    background: "#073b5c",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "0 8%",
-  },
+  minHeight: "76px",
+  background:
+    "linear-gradient(135deg, #073b5c 0%, #0b5875 55%, #087f73 100%)",
+  color: "white",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: "0 6%",
+  boxShadow: "0 8px 25px rgba(7, 59, 92, 0.18)",
+  position: "relative",
+  zIndex: 10,
+},
 
   logo: {
     margin: 0,
@@ -1744,22 +2584,39 @@ const styles = {
   },
 
   hero: {
-    maxWidth: "850px",
-    margin: "auto",
-    textAlign: "center",
-    paddingTop: "80px",
-  },
+  maxWidth: "900px",
+  margin: "0 auto",
+  textAlign: "center",
+  padding: "55px 25px 40px",
+  position: "relative",
+  zIndex: 1,
+},
 
   icon: {
-    fontSize: "70px",
-    marginBottom: "20px",
-  },
+  width: "88px",
+  height: "88px",
+  margin: "0 auto 20px",
+  borderRadius: "28px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "48px",
+  background:
+    "linear-gradient(135deg, #e2f7f2 0%, #dff1fa 100%)",
+  boxShadow:
+    "0 12px 30px rgba(7, 59, 92, 0.12)",
+  border: "1px solid rgba(7, 59, 92, 0.08)",
+},
 
   title: {
-    fontSize: "52px",
-    margin: "10px 0",
-    color: "#073b5c",
-  },
+  fontSize: "44px",
+  lineHeight: "1.1",
+  margin: "10px auto 15px",
+  color: "#073b5c",
+  fontWeight: "800",
+  letterSpacing: "-1px",
+  maxWidth: "800px",
+},
 
   description: {
     fontSize: "18px",
@@ -1787,7 +2644,7 @@ const styles = {
   },
 
   formContainer: {
-    maxWidth: "750px",
+    maxWidth: "720px",
     margin: "auto",
     padding: "55px 20px",
   },
@@ -1811,15 +2668,45 @@ const styles = {
   },
 
   form: {
-    background: "white",
-    padding: "35px",
-    borderRadius: "15px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-
+  background:
+    "linear-gradient(145deg, rgba(255,255,255,0.98), rgba(247,252,251,0.98))",
+  padding: "42px 48px",
+  borderRadius: "28px",
+  border: "1px solid rgba(7, 59, 92, 0.10)",
+  boxShadow:
+  "0 18px 45px rgba(20, 1, 3, 0.88)",
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+  maxWidth: "680px",
+  margin: "0 auto",
+},
+primaryButton: {
+  width: "100%",
+  padding: "16px 20px",
+  border: "none",
+  borderRadius: "14px",
+  background:
+    "linear-gradient(135deg, #087f73 0%, #19a98b 100%)",
+  color: "white",
+  fontSize: "17px",
+  fontWeight: "700",
+  cursor: "pointer",
+  boxShadow: "0 10px 24px rgba(25, 169, 139, 0.25)",
+  transition: "all 0.25s ease",
+},
+input: {
+  width: "100%",
+  padding: "16px 14px",
+  border: "1px solid #cbdde5",
+  borderRadius: "14px",
+  background: "#ffffff",
+  color: "#173b4d",
+  fontSize: "16px",
+  outline: "none",
+  boxSizing: "border-box",
+  transition: "all 0.2s ease",
+},
   patientBanner: {
     background: "#073b5c",
     color: "white",
@@ -1854,10 +2741,12 @@ const styles = {
 
   summaryCard: {
     background: "white",
-    padding: "35px",
-    borderRadius: "15px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+    padding: "28px",
+    border: "1px solid #3a0bf5",
+    borderRadius: "20px",
+    boxShadow: "0 14px 32px rgba(7,59,92,0.10)",
     marginTop: "20px",
+    lineHeight: "1.6",
   },
 
   warning: {
@@ -1944,19 +2833,36 @@ roleContainer: {
 
 roleButton: {
   width: "100%",
-  padding: "20px",
-  border: "1px solid #d6e4ea",
-  borderRadius: "12px",
-  background: "white",
+  minHeight: "120px",
+  padding: "24px 30px",
+  border: "1px solid rgba(7, 59, 92, 0.12)",
+  borderRadius: "20px",
+  background:
+    "linear-gradient(135deg, rgba(255,255,255,0.96), rgba(244,251,250,0.92))",
   fontSize: "20px",
   fontWeight: "600",
   color: "#073b5c",
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
+  textAlign: "left",
+  gap: "28px",
+  boxShadow: "0 10px 30px rgba(7, 59, 92, 0.10)",
+  transition: "all 0.25s ease",
+  transform: "translateY(0)",
+},
+roleIcon: {
+  width: "72px",
+  height: "72px",
+  minWidth: "72px",
+  borderRadius: "22px",
+  display: "flex",
+  alignItems: "center",
   justifyContent: "center",
-  gap: "15px",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+  fontSize: "38px",
+  background:
+    "linear-gradient(135deg, #e8f7f3 0%, #dff1fa 100%)",
+  boxShadow: "inset 0 0 0 1px rgba(7, 59, 92, 0.08)",
 },
 doctorGrid: {
   display: "grid",
@@ -1968,15 +2874,34 @@ doctorGrid: {
 dashboardCard: {
   background: "white",
   padding: "25px",
-  borderRadius: "15px",
+  minHeight: "210px",
+  borderRadius: "20px",
   border: "1px solid #d6e4ea",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.06)",
+  boxShadow: "0 12px 28px rgba(7,59,92,0.10)",
   textAlign: "left",
 },
 
 dashboardIcon: {
-  fontSize: "35px",
-  marginBottom: "10px",
+  width: "58px",
+  height: "58px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "32px",
+  borderRadius: "16px",
+  background: "#eef7fb",
+  marginBottom: "18px",
+},
+viewCaseButton: {
+  padding: "13px 24px",
+  border: "none",
+  borderRadius: "10px",
+  background: "linear-gradient(135deg, #073b5c, #087f73)",
+  color: "white",
+  fontSize: "15px",
+  fontWeight: "600",
+  cursor: "pointer",
+  boxShadow: "0 6px 16px rgba(7,59,92,0.15)",
 },
 headerRight: {
   display: "flex",
@@ -2048,27 +2973,29 @@ appointmentSelect: {
 },
 
 patientActions: {
-  display: "flex",
-  flexDirection: "column",
-  gap: "18px",
-  marginTop: "30px",
+  display: "grid",
+  gridTemplateColumns: "repeat(2, 1fr)",
+  gap: "20px",
+  marginTop: "35px",
 },
 
 patientActionButton: {
   width: "100%",
-  padding: "20px",
-  border: "1px solid #d6e4ea",
-  borderRadius: "15px",
-  background: "white",
+  minHeight: "105px",
+  padding: "22px 25px",
+  border: "1px solid #d6e7ed",
+  borderRadius: "20px",
+  background: "linear-gradient(135deg, #ffffff, #f4fbfc)",
   fontSize: "18px",
   color: "#073b5c",
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
-  gap: "18px",
+  gap: "20px",
   textAlign: "left",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-},
+  boxShadow: "0 8px 22px rgba(7,59,92,0.08)",
+  transition: "all 0.25s ease",
+}
 };
 
 export default App;
