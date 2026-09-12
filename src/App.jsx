@@ -289,7 +289,6 @@ recognition.onresult = (event) => {
 if (screen === "login") {
   return (
     <div style={styles.page}>
-      <Header setScreen={setScreen} />
 
       <main style={styles.hero}>
         <div style={styles.icon}>
@@ -345,7 +344,7 @@ if (screen === "login") {
 if (screen === "role") {
   return (
     <div style={styles.page}>
-      <Header setScreen={setScreen} />
+      <Header setScreen={setScreen} screen={screen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -403,7 +402,7 @@ if (screen === "role") {
 if (screen === "patient") {
   return (
     <div style={styles.page}>
-      <Header setScreen={setScreen} />
+      <Header setScreen={setScreen} screen={screen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -510,7 +509,7 @@ if (screen === "appointments") {
 
   return (
     <div style={styles.page}>
-      <Header setScreen={setScreen} />
+      <Header setScreen={setScreen} screen={screen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -672,7 +671,7 @@ if (screen === "appointments") {
 if (screen === "doctorCase" && selectedCase) {
   return (
     <div style={styles.page}>
-      <Header setScreen={setScreen} />
+      <Header setScreen={setScreen} screen={screen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -780,7 +779,7 @@ if (screen === "myAppointments") {
 
   return (
     <div style={styles.page}>
-      <Header setScreen={setScreen} />
+      <Header setScreen={setScreen} screen={screen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -840,7 +839,7 @@ if (screen === "doctor") {
   JSON.parse(localStorage.getItem("patientCases")) || [];
   return (
     <div style={styles.page}>
-      <Header setScreen={setScreen} />
+      <Header setScreen={setScreen} screen={screen} />
 
       <main style={styles.hero}>
         <div style={styles.card}>
@@ -950,7 +949,7 @@ if (screen === "doctor") {
     return (
       <div style={styles.page}>
 
-        <Header setScreen={setScreen} />
+        <Header setScreen={setScreen} screen={screen} />
 
         <main style={styles.hero}>
 
@@ -995,7 +994,7 @@ if (screen === "doctor") {
     return (
       <div style={styles.page}>
 
-        <Header setScreen={setScreen} />
+        <Header setScreen={setScreen} screen={screen} />
 
         <main style={styles.formContainer}>
 
@@ -1077,7 +1076,7 @@ if (screen === "doctor") {
     return (
       <div style={styles.page}>
 
-        <Header setScreen={setScreen} />
+        <Header setScreen={setScreen} screen={screen} />
 
         <main style={styles.caseContainer}>
 
@@ -1255,7 +1254,7 @@ if (screen === "doctor") {
   return (
     <div style={styles.page}>
 
-      <Header setScreen={setScreen} />
+      <Header setScreen={setScreen} screen={screen} />
 
       <main style={styles.caseContainer}>
 
@@ -1396,8 +1395,61 @@ if (screen === "doctor") {
    HEADER
 ========================= */
 
-function Header({ setScreen }) {
+function Header({ setScreen, screen }) {
+
+  const goBack = () => {
+    if (screen === "role") {
+      setScreen("login");
+    } else if (screen === "patient") {
+      setScreen("role");
+      } else if (screen === "welcome") {
+  setScreen("patient");
+      } else if (screen === "registration") {
+  setScreen("patient");
+ } else if (screen === "case") {
+  setScreen("patient");
+  } else if (screen === "summary") {
+  setScreen("appointments");
+} else if (screen === "case") {
+  setScreen("patient");
+} else if (screen === "summary") {
+  setScreen("case");
+
+    } else if (screen === "appointments") {
+      setScreen("patient");
+    } else if (screen === "myAppointments") {
+  setScreen("patient");
+    } else if (screen === "doctor") {
+      setScreen("role");
+    } else if (screen === "doctorCase") {
+      setScreen("doctor");
+    }
+  };
+
+  const goNext = () => {
+    if (screen === "role") {
+      const role = localStorage.getItem("userRole");
+
+      if (role === "patient") {
+        setScreen("patient");
+      } else if (role === "doctor") {
+        setScreen("doctor");
+      }
+    } else if (screen === "patient") {
+      setScreen("registration");
+    } else if (screen === "appointments") {
+      setScreen("myAppointments");
+    } else if (screen === "myAppointments") {
+      setScreen("patient");
+    } else if (screen === "doctor") {
+      setScreen("doctorCase");
+    } else if (screen === "doctorCase") {
+      setScreen("doctor");
+    }
+  };
+
   return (
+    <>
     <header style={styles.header}>
 
       <div>
@@ -1430,7 +1482,23 @@ function Header({ setScreen }) {
 </div>
 
     </header>
-  );
+        <div style={styles.navigationBar}>
+      <button
+        style={styles.navigationButton}
+        onClick={goBack}
+      >
+        ← Back
+      </button>
+
+      <button
+        style={styles.navigationButton}
+        onClick={goNext}
+      >
+        Next →
+      </button>
+    </div>
+  </>
+);
 }
 
 
@@ -1727,6 +1795,25 @@ headerLogout: {
   borderRadius: "8px",
   background: "white",
   color: "#073b5c",
+  fontSize: "15px",
+  fontWeight: "600",
+  cursor: "pointer",
+},
+navigationBar: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: "12px 30px",
+  background: "white",
+  borderBottom: "1px solid #d6e4ea",
+},
+
+navigationButton: {
+  padding: "10px 20px",
+  border: "none",
+  borderRadius: "8px",
+  background: "#073b5c",
+  color: "white",
   fontSize: "15px",
   fontWeight: "600",
   cursor: "pointer",
