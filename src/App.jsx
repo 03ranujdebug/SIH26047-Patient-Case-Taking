@@ -29,6 +29,8 @@ const [appointmentId, setAppointmentId] = useState("");
     medicines: "",
     allergies: "",
   });
+  const [redFlagDetected, setRedFlagDetected] = useState(false);
+  const [redFlagSymptom, setRedFlagSymptom] = useState("");
 
   function handlePatientChange(e) {
     setPatient({
@@ -37,12 +39,21 @@ const [appointmentId, setAppointmentId] = useState("");
     });
   }
 
-  function handleCaseChange(e) {
-    setCaseData({
-      ...caseData,
-      [e.target.name]: e.target.value,
-    });
-  }
+ function handleCaseChange(e) {
+  const { name, value } = e.target;
+
+  const updatedCaseData = {
+    ...caseData,
+    [name]: value,
+  };
+
+  setCaseData(updatedCaseData);
+
+  const textToCheck =
+    updatedCaseData.complaint + " " + updatedCaseData.symptoms;
+
+  setRedFlagDetected(checkRedFlags(textToCheck));
+} 
 function handleLogin() {
   const users = [
     {
@@ -227,6 +238,32 @@ function smartExtract(text) {
   extracted.symptoms = symptoms.join(", ");
 
   return extracted;
+}
+function checkRedFlags(text) {
+  const lowerText = text.toLowerCase();
+
+  const redFlags = [
+    "chest pain",
+    "difficulty breathing",
+    "shortness of breath",
+    "severe bleeding",
+    "unconscious",
+    "loss of consciousness",
+    "seizure",
+    "stroke",
+    "paralysis",
+    "severe abdominal pain",
+    "vomiting blood",
+    "blood in vomit",
+    "suicidal",
+    "suicide",
+  ];
+
+ const matchedFlag = redFlags.find((flag) => lowerText.includes(flag));
+
+setRedFlagSymptom(matchedFlag || "");
+
+return Boolean(matchedFlag);
 }
   function startVoiceInput() {
   const SpeechRecognition =
@@ -837,6 +874,13 @@ if (screen === "myAppointments") {
 if (screen === "doctor") {
   const savedCases =
   JSON.parse(localStorage.getItem("patientCases")) || [];
+  const normalCases = savedCases.filter(
+  (item) => !item.redFlagDetected
+);
+
+const redFlagCases = savedCases.filter(
+  (item) => item.redFlagDetected
+);
   return (
     <div style={styles.page}>
       <Header setScreen={setScreen} screen={screen} />
@@ -851,63 +895,23 @@ if (screen === "doctor") {
           <p style={styles.description}>
             Welcome, Doctor
           </p>
-          <div style={styles.savedCasesSection}>
-  <h2>Patient Cases</h2>
-
-  {savedCases.length === 0 ? (
-    <p>No patient cases available yet.</p>
-  ) : (
-    savedCases.map((item) => (
-      <div key={item.caseId} style={styles.caseItem}>
-        <h3>{item.caseId}</h3>
-
-        <p>
-          <strong>Patient:</strong>{" "}
-          {item.patient?.name || "Not provided"}
-        </p>
-
-        <p>
-          <strong>Age:</strong>{" "}
-          {item.patient?.age || "Not provided"}
-        </p>
-
-        <p>
-          <strong>Gender:</strong>{" "}
-          {item.patient?.gender || "Not provided"}
-        </p>
-
-        <p>
-          <strong>Complaint:</strong>{" "}
-          {item.caseData?.complaint || "Not provided"}
-        </p>
-
-        <p>
-          <strong>Created:</strong>{" "}
-          {item.createdAt}
-        </p>
-        <button
-  style={styles.viewCaseButton}
-  onClick={() => {
-    setSelectedCase(item);
-    setScreen("doctorCase");
-  }}
->
-  🔍 View Complete Case →
-</button>
-      </div>
-    ))
-  )}
-</div>
+          
 
           <div style={styles.doctorGrid}>
 
-            <div style={styles.dashboardCard}>
+            <div
+  style={styles.dashboardCard}
+ onClick={() => setScreen("doctorCases")}
+>
               <div style={styles.dashboardIcon}>📋</div>
               <h2>Patient Cases</h2>
               <p>View and manage patient case information.</p>
             </div>
 
-            <div style={styles.dashboardCard}>
+            <div
+  style={styles.dashboardCard}
+  onClick={() => setScreen("doctorRedFlags")}
+>
               <div style={styles.dashboardIcon}>🚨</div>
               <h2>Red Flag Cases</h2>
               <p>Review patients requiring special attention.</p>
@@ -940,6 +944,175 @@ if (screen === "doctor") {
             Logout
           </button>
 
+        </div>
+      </main>
+    </div>
+  );
+}
+if (screen === "doctorCases") {
+  const savedCases =
+    JSON.parse(localStorage.getItem("patientCases")) || [];
+
+  const normalCases = savedCases.filter(
+    (item) => !item.redFlagDetected
+  );
+
+  return (
+    <div style={styles.page}>
+      <Header setScreen={setScreen} screen={screen} />
+
+      <main style={styles.hero}>
+        <div style={styles.card}>
+          <h1 style={styles.title}>📋 Patient Cases</h1>
+
+          <p style={styles.description}>
+            Normal patient cases for healthcare professional review.
+          </p>
+
+          {normalCases.length === 0 ? (
+            <div style={styles.summaryCard}>
+              <h2>No Patient Cases</h2>
+              <p>No normal patient cases are available yet.</p>
+            </div>
+          ) : (
+            normalCases.map((item) => (
+              <div
+                key={item.caseId}
+                style={styles.summaryCard}
+              >
+                <h2>{item.caseId}</h2>
+
+                <p>
+                  <strong>Patient:</strong>{" "}
+                  {item.patient?.name || "Not provided"}
+                </p>
+
+                <p>
+                  <strong>Age:</strong>{" "}
+                  {item.patient?.age || "Not provided"}
+                </p>
+
+                <p>
+                  <strong>Gender:</strong>{" "}
+                  {item.patient?.gender || "Not provided"}
+                </p>
+
+                <p>
+                  <strong>Complaint:</strong>{" "}
+                  {item.caseData?.complaint || "Not provided"}
+                </p>
+
+                <p>
+                  <strong>Created:</strong>{" "}
+                  {item.createdAt}
+                </p>
+
+                <button
+                  style={styles.viewCaseButton}
+                  onClick={() => {
+                    setSelectedCase(item);
+                    setScreen("doctorCase");
+                  }}
+                >
+                  🔍 View Complete Case →
+                </button>
+              </div>
+            ))
+          )}
+
+          <button
+            style={styles.logoutButton}
+            onClick={() => setScreen("doctor")}
+          >
+            ← Back to Doctor Dashboard
+          </button>
+        </div>
+      </main>
+    </div>
+  );
+}
+if (screen === "doctorRedFlags") {
+  const savedCases =
+    JSON.parse(localStorage.getItem("patientCases")) || [];
+
+  const redFlagCases = savedCases.filter(
+    (item) => item.redFlagDetected
+  );
+
+  return (
+    <div style={styles.page}>
+      <Header setScreen={setScreen} screen={screen} />
+
+      <main style={styles.hero}>
+        <div style={styles.card}>
+          <h1 style={styles.title}>🚨 Red Flag Cases</h1>
+
+          <p style={styles.description}>
+            Patients requiring special attention.
+          </p>
+
+          {redFlagCases.length === 0 ? (
+            <div style={styles.summaryCard}>
+              <h2>No Red Flag Cases</h2>
+              <p>No red flag cases are available yet.</p>
+            </div>
+          ) : (
+            redFlagCases.map((item) => (
+              <div
+                key={item.caseId}
+                style={styles.summaryCard}
+              >
+                <h2>⚠️ {item.caseId}</h2>
+
+                <p>
+                  <strong>Patient:</strong>{" "}
+                  {item.patient?.name || "Not provided"}
+                </p>
+
+                <p>
+                  <strong>Age:</strong>{" "}
+                  {item.patient?.age || "Not provided"}
+                </p>
+
+                <p>
+                  <strong>Gender:</strong>{" "}
+                  {item.patient?.gender || "Not provided"}
+                </p>
+
+                <p>
+                  <strong>Red Flag:</strong>{" "}
+                  {item.redFlagSymptom || "Warning symptom detected"}
+                </p>
+
+                <p>
+                  <strong>Complaint:</strong>{" "}
+                  {item.caseData?.complaint || "Not provided"}
+                </p>
+
+                <p>
+                  <strong>Created:</strong>{" "}
+                  {item.createdAt}
+                </p>
+
+                <button
+                  style={styles.viewCaseButton}
+                  onClick={() => {
+                    setSelectedCase(item);
+                    setScreen("doctorCase");
+                  }}
+                >
+                  🔍 View Complete Case →
+                </button>
+              </div>
+            ))
+          )}
+
+          <button
+            style={styles.logoutButton}
+            onClick={() => setScreen("doctor")}
+          >
+            ← Back to Doctor Dashboard
+          </button>
         </div>
       </main>
     </div>
@@ -1133,6 +1306,31 @@ if (screen === "doctor") {
   </button>
 
 </div>
+{redFlagDetected && (
+  <div
+    style={{
+      marginTop: "15px",
+      padding: "15px",
+      background: "#fff3f3",
+      border: "2px solid #d32f2f",
+      borderRadius: "10px",
+      color: "#b71c1c",
+      fontWeight: "600",
+    }}
+  >
+    ⚠️ Urgent Attention Required
+
+<p style={{ margin: "8px 0 0", fontWeight: "normal" }}>
+  Possible warning symptom detected:{" "}
+  <strong>{redFlagSymptom}</strong>
+</p>
+
+<p style={{ margin: "8px 0 0", fontWeight: "normal" }}>
+  The reported symptoms may require immediate medical evaluation.
+  Please consult a healthcare professional or seek emergency care.
+</p>
+  </div>
+)}
 
             <label>
               2. How long have you had this problem?
@@ -1211,14 +1409,16 @@ if (screen === "doctor") {
   const newCaseId = generateCaseId();
 
   const newCase = {
+  caseId: newCaseId,
+  patient: { ...patient },
+  redFlagDetected: redFlagDetected,
+  redFlagSymptom: redFlagSymptom,
+  caseData: {
+    ...caseData,
     caseId: newCaseId,
-    patient: { ...patient },
-    caseData: {
-      ...caseData,
-      caseId: newCaseId,
-    },
-    createdAt: new Date().toLocaleString(),
-  };
+  },
+  createdAt: new Date().toLocaleString(),
+};
 
   const existingCases =
     JSON.parse(localStorage.getItem("patientCases")) || [];
